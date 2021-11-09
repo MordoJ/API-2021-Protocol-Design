@@ -12,6 +12,8 @@ public class Client {
 
     private static final String END_LINE = "XOXO";
     private static final String END_COMMUNICATION = "DONE";
+    private static final String SERVER_ADDRESS = "127.0.0.1";
+    private static final int PORT = 256;
 
     private static final Logger LOG = Logger.getLogger(Client.class.getName());
 
@@ -43,7 +45,7 @@ public class Client {
         BufferedReader in = null;
 
         try {
-            clientSocket = new Socket("127.0.0.1", 256);
+            clientSocket = new Socket(SERVER_ADDRESS, PORT);
             out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
