@@ -97,7 +97,7 @@ public class Server {
                     "- AVAILABLE OPERATIONS " + END_LINE +
                     "- ADD " + END_LINE +
                     "- MULT " + END_LINE +
-                    "- END OPERATIONS " + END_LINE );
+                    "- END OPERATIONS " + END_LINE);
             out.flush();
 
             LOG.info("Reading until client sends DONE or closes the connection...");
