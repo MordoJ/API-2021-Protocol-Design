@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class Server {
 
-    private static final String END_LINE = "XOXO\n";
+    private static final String END_LINE = "XOXO";
     private static final int PORT_LISTEN = 256;
 
     private final static Logger LOG = Logger.getLogger(Server.class.getName());
@@ -93,15 +93,16 @@ public class Server {
 
             // Dialog initialization
             // -> Sends the list of possible commands
-            out.write("BJR " + END_LINE +
-                    "- AVAILABLE OPERATIONS " + END_LINE +
-                    "- ADD " + END_LINE +
-                    "- MULT " + END_LINE +
-                    "- END OPERATIONS " + END_LINE);
+            out.write("BJR " + END_LINE + "\n" +
+                    "- AVAILABLE OPERATIONS " + END_LINE + "\n" +
+                    "- ADD " + END_LINE + "\n" +
+                    "- MULT " + END_LINE + "\n" +
+                    "- END OPERATIONS " + END_LINE + "\n");
             out.flush();
 
             LOG.info("Reading until client sends DONE or closes the connection...");
-            while((line = in.readLine()) != null) {
+            while((line = in.readLine()).equals("DONE " + END_LINE)) {
+                System.out.println();
 
                 message = line.split(" ");
 

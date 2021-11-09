@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  */
 public class Client {
 
-    private static final String END_LINE = "XOXO\n";
+    private static final String END_LINE = "XOXO";
     private static final String END_COMMUNICATION = "DONE";
     private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final int PORT = 256;
@@ -61,17 +61,18 @@ public class Client {
             do {
 
                 System.out.println("Enter your request : ");
-                request = stdin.readLine();// + " " + END_LINE;
+                request = stdin.readLine() + " " + END_LINE;
                 System.out.println("pjjjjj");
                 LOG.log(Level.INFO, "Sending \"" + request + "\" to the server.");
                 out.write(request);
                 out.flush();
 
                 LOG.log(Level.INFO, "*** Response sent by the server: ***");
-                while ((line = in.readLine()) != null) {
-                    LOG.log(Level.INFO, line);
-                    System.out.println(line);
-                }
+                //while ((line = in.readLine()) != null) {
+                line = in.readLine();
+                LOG.log(Level.INFO, line);
+                System.out.println(line);
+                //}
             } while(!request.equals(END_COMMUNICATION + " " + END_LINE));
 
         } catch (IOException ex) {
