@@ -1,7 +1,7 @@
 package ch.heigvd.api.calc;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +9,9 @@ import java.util.logging.Logger;
  * Calculator client implementation
  */
 public class Client {
+
+    private static final String END_LINE = "XOXO";
+    private static final String END_COMMUNICATION = "DONE";
 
     private static final Logger LOG = Logger.getLogger(Client.class.getName());
 
@@ -35,5 +38,54 @@ public class Client {
 
         stdin = new BufferedReader(new InputStreamReader(System.in));
 
+        Socket clientSocket = null;
+        BufferedWriter out = null;
+        BufferedReader in = null;
+
+        try {
+            clientSocket = new Socket("127.0.0.1", 256);
+            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            // First thing the serve does is sending the available commands, we have to
+            // display them right after the connection occured.
+            System.out.println(in.read());
+            String request;
+
+            do {
+
+                System.out.println("Enter your request : ");
+                request = stdin.readLine() + " " + END_LINE;
+                LOG.log(Level.INFO, "Sending \"" + request + "\" to the server.");
+                out.write(request);
+                out.flush();
+
+                LOG.log(Level.INFO, "*** Response sent by the server: ***");
+                String line;
+                while ((line = in.readLine()) != null) {
+                    LOG.log(Level.INFO, line);
+                    System.out.println(line);
+                }
+            } while(!request.equals(END_COMMUNICATION + " " + END_LINE));
+
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, ex.toString(), ex);
+        } finally {
+            try {
+                if (out != null) out.close();
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, ex.toString(), ex);
+            }
+            try {
+                if (in != null) in.close();
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, ex.toString(), ex);
+            }
+            try {
+                if (clientSocket != null && ! clientSocket.isClosed()) clientSocket.close();
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, ex.toString(), ex);
+            }
+        }
     }
 }
