@@ -103,12 +103,12 @@ public class Server {
             LOG.info("Reading until client sends DONE or closes the connection...");
             while((line = in.readLine()) != null) {
 
-                if (line.equalsIgnoreCase("DONE"))
-                    break;
-
                 message = line.split(" ");
 
-                if(message.length != 3) {
+                if(message.length == 2 && message[0].equals("DONE"))
+                    break;
+
+                if(message.length != 4) {
                     System.err.println("Error : client must give 3 components.\n");
                     return;
                 }
