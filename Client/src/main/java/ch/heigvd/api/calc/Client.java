@@ -56,7 +56,7 @@ public class Client {
 
             do {
 
-                System.out.println("Enter your request : ");
+                // System.out.println("Enter your request : ");
                 request = stdin.readLine() + " " + END_LINE;
                 LOG.log(Level.INFO, "Sending \"" + request + "\" to the server.");
                 out.write(request);
