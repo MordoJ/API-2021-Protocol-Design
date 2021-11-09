@@ -1,3 +1,6 @@
+# Specification 
+___
+
 ## 1. Protocol objectives
 The protocol allows the client to request the answer of a mathematical operation, giving two numbers and the operation wanted. .
 
@@ -20,7 +23,17 @@ When starting a communication, the server sends a "BJR" message, followed by the
 [ADD] (addition operation)<br />
 [MULT] (multiplication operation)<br />
 
+
+
+
 ## 4. Specific elements 
 (IF USEFUL)
+Supported operations
+Error handling
+Extensibility
 
 ## 5. Exemples
+
+Examples: examples of some typical dialogs.
+After writing the specification, submit a Pull Request
+

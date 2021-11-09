@@ -11,6 +11,9 @@ import java.util.logging.Logger;
  */
 public class Server {
 
+    private static final String END_LINE = "XOXO\n";
+    private static final int PORT_LISTEN = 256;
+
     private final static Logger LOG = Logger.getLogger(Server.class.getName());
 
     /**
@@ -32,6 +35,29 @@ public class Server {
          *  For a new client connection, the actual work is done by the handleClient method below.
          */
 
+        // Creation of "receptionist" socket and client socket
+
+        ServerSocket serverSocket;
+        Socket       clientSocket;
+
+        // Binding of receptionist socket with port 256 (from which the serveur will listen)
+        try {
+            serverSocket = new ServerSocket(PORT_LISTEN);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Error while trying to bind socket with port.", e);
+            return;
+        }
+
+        // Blocks until a client arrives
+        try {
+            // Receives a new socket when a client has arrived
+            LOG.log(Level.INFO, "Single-threaded: Waiting for a new client on port {0}", PORT_LISTEN);
+            clientSocket = serverSocket.accept();
+            handleClient(clientSocket);
+
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "ERROR : cannot accept connexion, wrong port or timeout", e);
+        }
     }
 
     /**
@@ -51,5 +77,79 @@ public class Server {
          *     - Send to result to the client
          */
 
+        // Creation of buffers (read/write)
+        BufferedReader in  = null;
+        BufferedWriter out = null;
+
+        // Initialization of buffers (read/write)
+        try {
+            in  = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"));
+
+            // Reads client message, handles it and sends the result to the client
+            String line;
+            String[] message;
+            int result;
+
+            // Dialog initialization
+            // -> Sends the list of possible commands
+            out.write("BJR " + END_LINE +
+                    "- AVAILABLE OPERATIONS " + END_LINE +
+                    "- ADD " + END_LINE +
+                    "- MULT " + END_LINE +
+                    "- END OPERATIONS " + END_LINE );
+            out.flush();
+
+            LOG.info("Reading until client sends DONE or closes the connection...");
+            while((line = in.readLine()) != null) {
+
+                if (line.equalsIgnoreCase("DONE"))
+                    break;
+
+                message = line.split(" ");
+
+                if(message.length != 3) {
+                    System.err.println("Error : client must give 3 components.\n");
+                    return;
+                }
+
+                int x = Integer.parseInt(message[1]);
+                int y = Integer.parseInt(message[2]);
+
+                if (message[0].equals("ADD")) {
+                    out.write("RESULT " + x+y + " " + END_LINE);
+                } else if(message[0].equals("MULT")){
+                    out.write("RESULT " + x*y + " " + END_LINE);
+                } else {
+                    System.err.println("Error : operation is not computable.\n");
+                    return;
+                }
+            }
+
+        } catch (Exception e) {
+
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException io) {
+                    LOG.log(Level.SEVERE, io.getMessage(), io);
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException io) {
+                    LOG.log(Level.SEVERE, io.getMessage(), io);
+                }
+            }
+            if (clientSocket != null) {
+                try {
+                    clientSocket.close();
+                } catch (IOException io) {
+                    LOG.log(Level.SEVERE, io.getMessage(), io);
+                }
+            }
+            LOG.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
 }
