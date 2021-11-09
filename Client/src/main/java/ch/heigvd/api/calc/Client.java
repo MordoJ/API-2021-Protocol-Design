@@ -56,6 +56,9 @@ public class Client {
                 LOG.log(Level.INFO, line);
                 System.out.println(line);
             }
+            LOG.log(Level.INFO, line);
+            System.out.println(line);
+
             String request;
 
             do {
@@ -64,12 +67,14 @@ public class Client {
                 request = stdin.readLine() + " " + END_LINE;
                 System.out.println("pjjjjj");
                 LOG.log(Level.INFO, "Sending \"" + request + "\" to the server.");
-                out.write(request);
+                out.write("DONE XOXO\n");
                 out.flush();
 
                 LOG.log(Level.INFO, "*** Response sent by the server: ***");
                 //while ((line = in.readLine()) != null) {
+                System.out.println("tjjjjjjjjj");
                 line = in.readLine();
+                System.out.println("PJJJJJ");
                 LOG.log(Level.INFO, line);
                 System.out.println(line);
                 //}
