@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  */
 public class Client {
 
-    private static final String END_LINE = "XOXO";
+    private static final String END_LINE = "XOXO\n";
     private static final String END_COMMUNICATION = "DONE";
     private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final int PORT = 256;
