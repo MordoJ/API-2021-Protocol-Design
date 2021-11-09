@@ -51,19 +51,22 @@ public class Client {
 
             // First thing the serve does is sending the available commands, we have to
             // display them right after the connection occured.
-            System.out.println(in.read());
+            String line;
+            while ((line = in.readLine()) != null) {
+                LOG.log(Level.INFO, line);
+                System.out.println(line);
+            }
             String request;
 
             do {
 
-                // System.out.println("Enter your request : ");
+                System.out.println("Enter your request : ");
                 request = stdin.readLine() + " " + END_LINE;
                 LOG.log(Level.INFO, "Sending \"" + request + "\" to the server.");
                 out.write(request);
                 out.flush();
 
                 LOG.log(Level.INFO, "*** Response sent by the server: ***");
-                String line;
                 while ((line = in.readLine()) != null) {
                     LOG.log(Level.INFO, line);
                     System.out.println(line);
