@@ -102,15 +102,8 @@ public class Server {
 
             LOG.info("Reading until client sends DONE or closes the connection...");
             while(!((line = in.readLine()).equals("DONE " + END_LINE))) {
-                System.out.println("FRRT");
-
                 message = line.split(" ");
 
-                /*
-                if(message.length == 2 && message[0].equals("DONE"))
-                    break;
-
-                 */
 
                 if(message.length != 4) {
                     System.err.println("Error : client must give 3 components.\n");
@@ -121,14 +114,20 @@ public class Server {
                 int y = Integer.parseInt(message[2]);
 
                 if (message[0].equals("ADD")) {
-                    out.write("RESULT " + x+y + " " + END_LINE + "\n");
+                    int mdr = x + y;
+                    out.write("RESULT " + mdr + " " + END_LINE + "\n");
                 } else if(message[0].equals("MULT")){
                     out.write("RESULT " + x*y + " " + END_LINE + "\n");
                 } else {
                     System.err.println("Error : operation is not computable.\n");
                     return;
                 }
+                out.flush();
             }
+            LOG.info("Cleaning up resources...");
+            clientSocket.close();
+            in.close();
+            out.close();
 
         } catch (Exception e) {
 

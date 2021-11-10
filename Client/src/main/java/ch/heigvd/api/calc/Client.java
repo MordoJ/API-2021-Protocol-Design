@@ -49,7 +49,7 @@ public class Client {
             out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            // First thing the serve does is sending the available commands, we have to
+            // First thing the server does is sending the available commands, we have to
             // display them right after the connection occured.
             String line;
             while (!(line = in.readLine()).equals("- END OPERATIONS XOXO")) {
@@ -64,21 +64,17 @@ public class Client {
             do {
 
                 System.out.println("Enter your request : ");
-                request = stdin.readLine() + " " + END_LINE;
-                System.out.println("pjjjjj");
+                request = stdin.readLine() + " " + END_LINE + "\n";
                 LOG.log(Level.INFO, "Sending \"" + request + "\" to the server.");
-                out.write("DONE XOXO\n");
+                out.write(request);
                 out.flush();
 
                 LOG.log(Level.INFO, "*** Response sent by the server: ***");
-                //while ((line = in.readLine()) != null) {
-                System.out.println("tjjjjjjjjj");
                 line = in.readLine();
-                System.out.println("PJJJJJ");
                 LOG.log(Level.INFO, line);
                 System.out.println(line);
-                //}
-            } while(!request.equals(END_COMMUNICATION + " " + END_LINE));
+            } while(!request.equals(END_COMMUNICATION + " " + END_LINE + "\n"));
+
 
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, ex.toString(), ex);
